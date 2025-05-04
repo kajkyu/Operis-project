@@ -16,3 +16,7 @@
 - **"유현석"** : Design 설계 및 Front-end 구현, Back-end 보조
 - **"이호기"** : Back-end 구현 및 DataBase 관리
 - **"이충희"** : Back-end 구현 및 Front-end 보조, DataBase 관리
+
+## 웹 프로젝트 화면 구현(초기 단계)
+![Image](https://github.com/user-attachments/assets/1a00235f-81d7-4e2b-8b3d-cf90a60f77d2)
+![Image](https://github.com/user-attachments/assets/c0556da4-6f21-413c-a5b6-fe32e727dbcc)
