@@ -1,0 +1,146 @@
+{% extends "base.html" %}  <!-- 기본 템플릿(base.html)을 상속받아 사용 -->
+
+{% block content %}  <!-- base.html의 content 블록을 오버라이드 -->
+<div class="container mt-4">  <!-- Bootstrap 컨테이너 클래스 사용, 상단 여백 4단위 -->
+    <div class="row">  <!-- Bootstrap 그리드 시스템의 행 시작 -->
+        <!-- 왼쪽 사이드바: 법안 기본 정보 표시 -->
+        <div class="col-md-3">  <!-- 중간 크기 화면에서 3칸 차지 -->
+            <div class="card shadow mb-4">  <!-- 카드 컴포넌트, 그림자 효과, 하단 여백 -->
+                <div class="card-header bg-white">  <!-- 흰색 배경의 카드 헤더 -->
+                    <h5 class="mb-0">법안 정보</h5>  <!-- 하단 여백 없는 제목 -->
+                </div>
+                <div class="card-body">  <!-- 카드 본문 -->
+                    <!-- 제안자 정보 섹션 -->
+                    <div class="mb-3">  <!-- 하단 여백 3단위 -->
+                        <h6 class="text-muted">제안자</h6>  <!-- 회색 텍스트의 작은 제목 -->
+                        <p class="mb-0">{{ bill.proposer }}</p>  <!-- 제안자 이름 표시 -->
+                    </div>
+                    <!-- 제안일 정보 섹션 -->
+                    <div class="mb-3">
+                        <h6 class="text-muted">제안일</h6>
+                        <p class="mb-0">{{ bill.date }}</p>  <!-- 제안일 표시 -->
+                    </div>
+                    <!-- 조회수 정보 섹션 -->
+                    <div class="mb-3">
+                        <h6 class="text-muted">조회수</h6>
+                        <p class="mb-0">{{ bill.views }}</p>  <!-- 조회수 표시 -->
+                    </div>
+                    <!-- 목록으로 돌아가기 버튼 -->
+                    <div class="d-grid gap-2">  <!-- 그리드 레이아웃, 버튼 간격 2단위 -->
+                        <a href="{{ url_for('index') }}" class="btn btn-primary">목록으로 돌아가기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 오른쪽 메인 컨텐츠: 법안 상세 내용과 투표 기능 -->
+        <div class="col-md-9">  <!-- 중간 크기 화면에서 9칸 차지 -->
+            <div class="card shadow">
+                <div class="card-header bg-white">
+                    <h2 class="mb-0 text-dark">{{ bill.title }}</h2>  <!-- 법안 제목 표시 -->
+                </div>
+                <div class="card-body">
+                    <!-- 법안 내용 섹션 -->
+                    <div class="mb-4">
+                        <h5>내용</h5>
+                        <p>{{ bill.content }}</p>  <!-- 법안 내용 표시 -->
+                    </div>
+                    <!-- 투표 현황 섹션 -->
+                    <div class="mb-4">
+                        <h5>투표 현황</h5>
+                        <!-- 찬반 배지 표시 -->
+                        <div class="d-flex gap-3 mb-2">  <!-- Flexbox 레이아웃, 요소 간격 3단위 -->
+                            <span class="badge bg-success">찬성: {{ bill.agree }}</span>
+                            <span class="badge bg-danger">반대: {{ bill.disagree }}</span>
+                        </div>
+                        <!-- 투표 비율 계산 -->
+                        {% set total = bill.agree + bill.disagree %}
+                        {% set agree_percent = (bill.agree / total * 100)|round %}
+                        {% set disagree_percent = (bill.disagree / total * 100)|round %}
+                        <!-- 진행 바로 투표 비율 시각화 -->
+                        <div class="progress" style="height: 2rem;">
+                            <div class="progress-bar bg-success" role="progressbar" data-width="{{ agree_percent }}">
+                                {{ agree_percent }}%
+                            </div>
+                            <div class="progress-bar bg-danger" role="progressbar" data-width="{{ disagree_percent }}">
+                                {{ disagree_percent }}%
+                            </div>
+                        </div>
+                        <!-- 투표 버튼 -->
+                        <div class="d-flex gap-2 mt-3">
+                            <button class="btn btn-success flex-grow-1" onclick="vote('agree')">찬성</button>
+                            <button class="btn btn-danger flex-grow-1" onclick="vote('disagree')">반대</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+<div class="card mt-4">  <!-- 토론 섹션을 감싸는 카드, 상단 여백 4단위 -->
+    <div class="card-header">
+        토론  <!-- 토론 섹션 제목 -->
+    </div>
+    <div class="card-body">
+        <form>  <!-- 의견 작성 폼 (아직 실제 동작은 구현되지 않음) -->
+            <div class="mb-3">
+                <textarea class="form-control" rows="3" placeholder="의견을 남겨주세요"></textarea>  <!-- 의견 입력란 -->
+            </div>
+            <button type="submit" class="btn btn-primary">의견 등록</button>  <!-- 의견 등록 버튼 -->
+        </form>
+        
+        <div class="mt-4">  <!-- 등록된 의견 목록, 상단 여백 4단위 -->
+            <div class="card mb-3">  <!-- 첫 번째 의견 카드, 하단 여백 3단위 -->
+                <div class="card-body">
+                    <h5 class="card-title">김민수</h5>  <!-- 의견 작성자 -->
+                    <p class="card-text">이 법안은 매우 타당합니다. 모든 국민이 기본소득을 받을 수 있도록 하는 것은 중요한 일입니다.</p>  <!-- 의견 내용 -->
+                    <small class="text-muted">2024-03-03</small>  <!-- 의견 작성일 -->
+                </div>
+            </div>
+            
+            <div class="card">  <!-- 두 번째 의견 카드 -->
+                <div class="card-body">
+                    <h5 class="card-title">이지은</h5>
+                    <p class="card-text">재정 부담이 너무 크다고 생각합니다. 다른 방법을 모색해야 할 것 같습니다.</p>
+                    <small class="text-muted">2024-03-04</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 페이지가 로드되면 진행바의 data-width 속성 값을 읽어와 실제 너비로 설정
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const width = bar.getAttribute('data-width');
+        bar.style.width = width + '%';
+    });
+});
+
+function vote(type) {
+    // 투표 버튼 클릭 시 해당 타입(찬성/반대)으로 POST 요청을 보냄
+    fetch(`/vote/{{ bill.id }}/${type}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 투표 성공 시 페이지 새로고침
+            location.reload();
+        } else {
+            alert('투표에 실패했습니다.');
+        }
+    })
+    .catch(error => {
+        // 네트워크 오류 등 예외 처리
+        console.error('Error:', error);
+        alert('투표 중 오류가 발생했습니다.');
+    });
+}
+</script>
+{% endblock %}  <!-- content 블록 종료 -->
