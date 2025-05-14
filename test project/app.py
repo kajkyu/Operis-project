@@ -2,15 +2,15 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key'  # ¼¼¼ÇÀ» À§ÇÑ ½ÃÅ©¸´ Å°
+app.secret_key = 'your-secret-key'  # ì„¸ì…˜ì„ ìœ„í•œ ì‹œí¬ë¦¿ í‚¤
 
-# »ùÇÃ µ¥ÀÌÅÍ
+# ìƒ˜í”Œ ë°ì´í„°
 bills = [
     {
         'id': 1,
-        'title': '±âº»¼Òµæ¹ı',
-        'content': '¸ğµç ±¹¹Î¿¡°Ô ¸Å¿ù ±âº»¼ÒµæÀ» Áö±ŞÇÏ´Â ¹ı¾ÈÀÔ´Ï´Ù.',
-        'proposer': '±èÃ¶¼ö ÀÇ¿ø',
+        'title': 'ê¸°ë³¸ì†Œë“ë²•',
+        'content': 'ëª¨ë“  êµ­ë¯¼ì—ê²Œ ë§¤ì›” ê¸°ë³¸ì†Œë“ì„ ì§€ê¸‰í•˜ëŠ” ë²•ì•ˆì…ë‹ˆë‹¤.',
+        'proposer': 'ê¹€ì² ìˆ˜ ì˜ì›',
         'date': '2024-03-01',
         'views': 1500,
         'agree': 1200,
@@ -18,9 +18,9 @@ bills = [
     },
     {
         'id': 2,
-        'title': 'È¯°æº¸È£¹ı °³Á¤¾È',
-        'content': 'Åº¼Ò¹èÃâ·®À» ÁÙÀÌ±â À§ÇÑ ¹ı¾ÈÀÔ´Ï´Ù.',
-        'proposer': 'ÀÌ¿µÈñ ÀÇ¿ø',
+        'title': 'í™˜ê²½ë³´í˜¸ë²• ê°œì •ì•ˆ',
+        'content': 'íƒ„ì†Œë°°ì¶œëŸ‰ì„ ì¤„ì´ê¸° ìœ„í•œ ë²•ì•ˆì…ë‹ˆë‹¤.',
+        'proposer': 'ì´ì˜í¬ ì˜ì›',
         'date': '2024-03-02',
         'views': 2000,
         'agree': 800,
@@ -30,7 +30,7 @@ bills = [
 
 @app.route('/')
 def index():
-    # ÃÖ´ë Âù¼º, ÃÖ´ë ¹İ´ë, ÃÖ´Ù Á¶È¸, ÃÖ¼Ò Á¶È¸ ¹ı¾È Ã£±â
+    # ìµœëŒ€ ì°¬ì„±, ìµœëŒ€ ë°˜ëŒ€, ìµœë‹¤ ì¡°íšŒ, ìµœì†Œ ì¡°íšŒ ë²•ì•ˆ ì°¾ê¸°
     max_agree = max(bills, key=lambda x: x['agree'])
     max_disagree = max(bills, key=lambda x: x['disagree'])
     max_views = max(bills, key=lambda x: x['views'])

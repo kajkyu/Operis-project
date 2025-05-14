@@ -3,18 +3,18 @@
 {% block content %}
 <div class="card">
     <div class="card-header">
-        <h2>¹ı¾È °Ë»ö</h2>
+        <h2>ë²•ì•ˆ ê²€ìƒ‰</h2>
     </div>
     <div class="card-body">
         <form action="{{ url_for('search') }}" method="get" class="mb-4">
             <div class="input-group">
-                <input type="text" class="form-control" name="q" value="{{ query }}" placeholder="¹ı¾È Á¦¸ñ ¶Ç´Â ³»¿ëÀ» °Ë»öÇÏ¼¼¿ä">
-                <button class="btn btn-primary" type="submit">°Ë»ö</button>
+                <input type="text" class="form-control" name="q" value="{{ query }}" placeholder="ë²•ì•ˆ ì œëª© ë˜ëŠ” ë‚´ìš©ì„ ê²€ìƒ‰í•˜ì„¸ìš”">
+                <button class="btn btn-primary" type="submit">ê²€ìƒ‰</button>
             </div>
         </form>
 
         {% if query %}
-        <h4>°Ë»ö °á°ú: "{{ query }}"</h4>
+        <h4>ê²€ìƒ‰ ê²°ê³¼: "{{ query }}"</h4>
         {% endif %}
 
         <div class="list-group">
@@ -25,15 +25,15 @@
                     <small>{{ bill.date }}</small>
                 </div>
                 <p class="mb-1">{{ bill.content }}</p>
-                <small>¹ßÀÇÀÚ: {{ bill.proposer }}</small>
+                <small>ë°œì˜ì: {{ bill.proposer }}</small>
                 <div class="mt-2">
-                    <span class="badge bg-success">Âù¼º: {{ bill.agree }}</span>
-                    <span class="badge bg-danger">¹İ´ë: {{ bill.disagree }}</span>
-                    <span class="badge bg-info">Á¶È¸¼ö: {{ bill.views }}</span>
+                    <span class="badge bg-success">ì°¬ì„±: {{ bill.agree }}</span>
+                    <span class="badge bg-danger">ë°˜ëŒ€: {{ bill.disagree }}</span>
+                    <span class="badge bg-info">ì¡°íšŒìˆ˜: {{ bill.views }}</span>
                 </div>
             </a>
             {% endfor %}
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}

@@ -5,17 +5,17 @@
     <div class="col-md-6 mb-4">
         <div class="card">
             <div class="card-header bg-success" style="color: #222;">
-                ÃÖ´Ù Âù¼º ¹ı¾È
+                ìµœë‹¤ ì°¬ì„± ë²•ì•ˆ
             </div>
             <div class="card-body" style="color: #222;">
                 <div class="d-flex align-items-center mb-2">
                     <h5 class="card-title mb-0 me-2">{{ max_agree.title }}</h5>
-                    <span class="badge bg-info">Á¶È¸¼ö: {{ max_agree.views }}</span>
+                    <span class="badge bg-info">ì¡°íšŒìˆ˜: {{ max_agree.views }}</span>
                 </div>
                 <p class="card-text">{{ max_agree.content }}</p>
                 <div class="mb-2">
-                    <span class="badge bg-success">Âù¼º: {{ max_agree.agree }}</span>
-                    <span class="badge bg-danger">¹İ´ë: {{ max_agree.disagree }}</span>
+                    <span class="badge bg-success">ì°¬ì„±: {{ max_agree.agree }}</span>
+                    <span class="badge bg-danger">ë°˜ëŒ€: {{ max_agree.disagree }}</span>
                 </div>
                 {% set total = max_agree.agree + max_agree.disagree %}
                 {% set agree_percent = (max_agree.agree / total * 100)|round %}
@@ -24,7 +24,7 @@
                     <div class="progress-bar bg-success" data-width="{{ agree_percent }}">{{ agree_percent }}%</div>
                     <div class="progress-bar bg-danger" data-width="{{ disagree_percent }}">{{ disagree_percent }}%</div>
                 </div>
-                <a href="{{ url_for('bill_detail', bill_id=max_agree.id) }}" class="btn btn-success mt-2">ÀÚ¼¼È÷ º¸±â</a>
+                <a href="{{ url_for('bill_detail', bill_id=max_agree.id) }}" class="btn btn-success mt-2">ìì„¸íˆ ë³´ê¸°</a>
             </div>
         </div>
     </div>
@@ -32,17 +32,17 @@
     <div class="col-md-6 mb-4">
         <div class="card">
             <div class="card-header bg-danger" style="color: #222;">
-                ÃÖ´Ù ¹İ´ë ¹ı¾È
+                ìµœë‹¤ ë°˜ëŒ€ ë²•ì•ˆ
             </div>
             <div class="card-body" style="color: #222;">
                 <div class="d-flex align-items-center mb-2">
                     <h5 class="card-title mb-0 me-2">{{ max_disagree.title }}</h5>
-                    <span class="badge bg-info">Á¶È¸¼ö: {{ max_disagree.views }}</span>
+                    <span class="badge bg-info">ì¡°íšŒìˆ˜: {{ max_disagree.views }}</span>
                 </div>
                 <p class="card-text">{{ max_disagree.content }}</p>
                 <div class="mb-2">
-                    <span class="badge bg-success">Âù¼º: {{ max_disagree.agree }}</span>
-                    <span class="badge bg-danger">¹İ´ë: {{ max_disagree.disagree }}</span>
+                    <span class="badge bg-success">ì°¬ì„±: {{ max_disagree.agree }}</span>
+                    <span class="badge bg-danger">ë°˜ëŒ€: {{ max_disagree.disagree }}</span>
                 </div>
                 {% set total = max_disagree.agree + max_disagree.disagree %}
                 {% set agree_percent = (max_disagree.agree / total * 100)|round %}
@@ -51,7 +51,7 @@
                     <div class="progress-bar bg-success" data-width="{{ agree_percent }}">{{ agree_percent }}%</div>
                     <div class="progress-bar bg-danger" data-width="{{ disagree_percent }}">{{ disagree_percent }}%</div>
                 </div>
-                <a href="{{ url_for('bill_detail', bill_id=max_disagree.id) }}" class="btn btn-danger mt-2">ÀÚ¼¼È÷ º¸±â</a>
+                <a href="{{ url_for('bill_detail', bill_id=max_disagree.id) }}" class="btn btn-danger mt-2">ìì„¸íˆ ë³´ê¸°</a>
             </div>
         </div>
     </div>
@@ -61,17 +61,17 @@
     <div class="col-md-6 mb-4">
         <div class="card">
             <div class="card-header bg-info" style="color: #222;">
-                ÃÖ´Ù Á¶È¸ ¹ı¾È
+                ìµœë‹¤ ì¡°íšŒ ë²•ì•ˆ
             </div>
             <div class="card-body" style="color: #222;">
                 <div class="d-flex align-items-center mb-2">
                     <h5 class="card-title mb-0 me-2">{{ max_views.title }}</h5>
-                    <span class="badge bg-info">Á¶È¸¼ö: {{ max_views.views }}</span>
+                    <span class="badge bg-info">ì¡°íšŒìˆ˜: {{ max_views.views }}</span>
                 </div>
                 <p class="card-text">{{ max_views.content }}</p>
                 <div class="mb-2">
-                    <span class="badge bg-success">Âù¼º: {{ max_views.agree }}</span>
-                    <span class="badge bg-danger">¹İ´ë: {{ max_views.disagree }}</span>
+                    <span class="badge bg-success">ì°¬ì„±: {{ max_views.agree }}</span>
+                    <span class="badge bg-danger">ë°˜ëŒ€: {{ max_views.disagree }}</span>
                 </div>
                 {% set total = max_views.agree + max_views.disagree %}
                 {% set agree_percent = (max_views.agree / total * 100)|round %}
@@ -80,7 +80,7 @@
                     <div class="progress-bar bg-success" data-width="{{ agree_percent }}">{{ agree_percent }}%</div>
                     <div class="progress-bar bg-danger" data-width="{{ disagree_percent }}">{{ disagree_percent }}%</div>
                 </div>
-                <a href="{{ url_for('bill_detail', bill_id=max_views.id) }}" class="btn btn-info mt-2">ÀÚ¼¼È÷ º¸±â</a>
+                <a href="{{ url_for('bill_detail', bill_id=max_views.id) }}" class="btn btn-info mt-2">ìì„¸íˆ ë³´ê¸°</a>
             </div>
         </div>
     </div>
@@ -88,17 +88,17 @@
     <div class="col-md-6 mb-4">
         <div class="card">
             <div class="card-header bg-warning" style="color: #222;">
-                ÃÖ¼Ò Á¶È¸ ¹ı¾È
+                ìµœì†Œ ì¡°íšŒ ë²•ì•ˆ
             </div>
             <div class="card-body" style="color: #222;">
                 <div class="d-flex align-items-center mb-2">
                     <h5 class="card-title mb-0 me-2">{{ min_views.title }}</h5>
-                    <span class="badge bg-info">Á¶È¸¼ö: {{ min_views.views }}</span>
+                    <span class="badge bg-info">ì¡°íšŒìˆ˜: {{ min_views.views }}</span>
                 </div>
                 <p class="card-text">{{ min_views.content }}</p>
                 <div class="mb-2">
-                    <span class="badge bg-success">Âù¼º: {{ min_views.agree }}</span>
-                    <span class="badge bg-danger">¹İ´ë: {{ min_views.disagree }}</span>
+                    <span class="badge bg-success">ì°¬ì„±: {{ min_views.agree }}</span>
+                    <span class="badge bg-danger">ë°˜ëŒ€: {{ min_views.disagree }}</span>
                 </div>
                 {% set total = min_views.agree + min_views.disagree %}
                 {% set agree_percent = (min_views.agree / total * 100)|round %}
@@ -107,7 +107,7 @@
                     <div class="progress-bar bg-success" data-width="{{ agree_percent }}">{{ agree_percent }}%</div>
                     <div class="progress-bar bg-danger" data-width="{{ disagree_percent }}">{{ disagree_percent }}%</div>
                 </div>
-                <a href="{{ url_for('bill_detail', bill_id=min_views.id) }}" class="btn btn-warning mt-2">ÀÚ¼¼È÷ º¸±â</a>
+                <a href="{{ url_for('bill_detail', bill_id=min_views.id) }}" class="btn btn-warning mt-2">ìì„¸íˆ ë³´ê¸°</a>
             </div>
         </div>
     </div>
@@ -115,7 +115,7 @@
 
 <div class="card mt-4">
     <div class="card-header">
-        ÃÖ½Å ¹ı¾È ¸ñ·Ï
+        ìµœì‹  ë²•ì•ˆ ëª©ë¡
     </div>
     <div class="card-body">
         <div class="list-group">
@@ -123,13 +123,13 @@
             <a href="{{ url_for('bill_detail', bill_id=bill.id) }}" class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between align-items-center">
                     <h5 class="mb-1 flex-grow-1 me-2" style="flex:1;">{{ bill.title }}</h5>
-                    <span class="badge bg-info ms-2">Á¶È¸¼ö: {{ bill.views }}</span>
+                    <span class="badge bg-info ms-2">ì¡°íšŒìˆ˜: {{ bill.views }}</span>
                     <small>{{ bill.date }}</small>
                 </div>
                 <p class="mb-1">{{ bill.content }}</p>
                 <div class="mt-2">
-                    <span class="badge bg-success">Âù¼º: {{ bill.agree }}</span>
-                    <span class="badge bg-danger">¹İ´ë: {{ bill.disagree }}</span>
+                    <span class="badge bg-success">ì°¬ì„±: {{ bill.agree }}</span>
+                    <span class="badge bg-danger">ë°˜ëŒ€: {{ bill.disagree }}</span>
                 </div>
                 {% set total = bill.agree + bill.disagree %}
                 {% set agree_percent = (bill.agree / total * 100)|round %}
