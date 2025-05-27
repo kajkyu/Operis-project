@@ -1,0 +1,164 @@
+{% extends "header2.html" %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        최다 찬성 법안
+                    </div>
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <h5 class="card-title">{{max_good['name']}}</h5>
+                            <span class="badge bg-info">조회수: {{max_good['views']}}</span>
+                            <!-- <span class="badge bg-info">조회수: {{max_good[6]}}</span> -->
+                            <!-- <p class="card-text">{{max_good['proposer']}}</p> -->
+                        </div>
+                        <p class="card-text">제안번호 : 22102321 <br> 발의자 : 박형수의원 등 10인 <br> 제안일 : 2025-5-12 </p>
+                        <!-- <p class="card-text">{{max_good[2]}}</p> -->
+                        <div class="mb-2">
+                            
+                            <span class="badge bg-success">찬성: {{max_good['good']}}</span>
+                            <span class="badge bg-danger">반대: {{max_good['bad']}}</span>
+                        </div>
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-success" data-width = "{{max_good['good_rate']}}">{{max_good['good_rate']}}%</div>
+                            <div class="progress-bar bg-danger" data-width="{{max_good['bad_rate']}}">{{max_good['bad_rate']}}%</div>
+                        </div>
+                        <a href="/contents/{{max_good['id']}}" class="btn btn-success mt-2">자세히 보기</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-danger">
+                        최다 반대 법안
+                    </div>
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <h5 class="card-title">{{max_bad['name']}}</h5>
+                            <span class="badge bg-info">조회수: {{max_bad['views']}}</span>
+                        </div>
+                        <p class="card-text">제안번호 : {{max_bad['id']}} <br> 발의자 : {{max_bad['proposer']}} <br> 제안일 : {{max_bad['date']}}</p>
+                        <div class="mb-2">
+                            <span class="badge bg-success">찬성: {{max_bad['good']}}</span>
+                            <span class="badge bg-danger">반대: {{max_bad['bad']}}</span>
+                        </div>
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-success" data-width="{{max_bad['good_rate']}}">{{max_bad['good_rate']}}%</div>
+                            <div class="progress-bar bg-danger" data-width="{{max_bad['bad_rate']}}">{{max_bad['bad_rate']}}%</div>
+                        </div>
+                        <a href="/contents/{{max_bad['id']}}" class="btn btn-danger mt-2">자세히 보기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        최다 조회 법안
+                    </div>
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <h5 class="card-title">{{max_view['name']}}</h5>
+                            <span class="badge bg-info">조회수: 2534</span>
+                        </div>
+                        <p class="card-text">제안번호 : {{max_view['id']}} <br> 발의자 : {{max_view['proposer']}} <br> 제안일 : {{max_view['date']}}</p>
+                        <div class="mb-2">
+                            <span class="badge bg-success">찬성: {{max_view['good']}}</span>
+                            <span class="badge bg-danger">반대: {{max_view['bad']}}</span>
+                        </div>
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-success" data-width="{{max_view['good_rate']}}">{{max_view['good_rate']}}%</div>
+                            <div class="progress-bar bg-danger" data-width="{{max_view['bad_rate']}}">{{max_view['bad_rate']}}%</div>
+                        </div>
+                        <a href="/contents/{{max_view['id']}}" class="btn btn-info mt-2">자세히 보기</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        주목할만한 법안
+                    </div>
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <h5 class="card-title">{{max_valuable['name']}}</h5>
+                            <span class="badge bg-info">조회수: {{max_valuable['views']}}</span>
+                        </div>
+                        <p class="card-text">제안번호 : {{max_valuable['id']}} <br> 발의자 : {{max_valuable['proposer']}} <br> 제안일 : {{max_valuable['date']}}</p>
+                        <div class="mb-2">
+                            <span class="badge bg-success">찬성: {{max_valuable['good']}}</span>
+                            <span class="badge bg-danger">반대: {{max_valuable['bad']}}</span>
+                        </div>
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-success" data-width="{{max_valuable['good_rate']}}">{{max_valuable['good_rate']}}%</div>
+                            <div class="progress-bar bg-danger" data-width="{{max_valuable['bad_rate']}}">{{max_valuable['bad_rate']}}%</div>
+                        </div>
+                        <a href="/contents/{{max_valuable['id']}}" class="btn btn-warning mt-2">자세히 보기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                최신 법안 목록
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for rows in new_list %}
+                    <a href="/contents/{{rows['id']}}" class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-1 flex-grow-1 me-2">{{rows['name']}}</h5>
+                            <span class="badge bg-info ms-2">조회수: {{rows['views']}}</span>
+                            <small>{{rows['date']}}</small>
+                        </div>
+                        <p class="mb-1">제안번호 : {{rows['id']}} <br> 발의자 : {{rows['proposer']}} </p>
+                        {% if (rows['good_rate'] == 0) and (rows['bad_rate'] == 0) %}
+                        <div class="no-votes">
+                            <div class="no-votes-icon">
+                                <i class="bi bi-hourglass-split"></i>
+                            </div>
+                            <div class="no-votes-text">아직 투표가 진행되지 않았습니다</div>
+                        </div>
+                        {% else %}
+                        <div class="mt-2">
+                            <span class="badge bg-success">찬성: {{rows['good']}}</span>
+                            <span class="badge bg-danger">반대: {{rows['bad']}}</span>
+                        </div>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-success" data-width="{{rows['good_rate']}}">{{rows['good_rate']}}%</div>
+                            <div class="progress-bar bg-danger" data-width="{{rows['bad_rate']}}">{{rows['bad_rate']}}%</div>
+                    </div>
+                    {% endif %}
+                    </a>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <footer class="footer">
+        <div class="container">
+            <span>© 2024 대한민국 입법 포털. All rights reserved.</span>
+        </div>
+    </footer> -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBars = document.querySelectorAll('.progress-bar');
+            progressBars.forEach(bar => {
+                const width = bar.getAttribute('data-width');
+                bar.style.width = width + '%';
+            });
+        });
+    </script>
+{% endblock %}

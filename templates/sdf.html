@@ -1,0 +1,288 @@
+{% extends "header2.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{url_for('static' ,filename = 'contents.css')}}">
+{% endblock %}
+
+{% block content %}
+            
+
+    <div class="main-container">
+        <!-- 분리된 카드들 -->
+        <div class="cards-grid">
+            <!-- 법안 정보 카드 -->
+            <div class="bill-info-card">
+                <h3 class="info-title">법안 정보</h3>
+                
+                <div class="info-item">
+                    <span class="info-label">제안자</span>
+                    <span class="info-value">이영희 의원</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">제안일</span>
+                    <span class="info-value">2024-03-02</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">조회수</span>
+                    <span class="info-value">2000</span>
+                </div>
+                
+                <button class="detail-btn">
+                    <i class="bi bi-file-text"></i> 목록으로 돌아가기
+                </button>
+                
+                <div class="chart-container">
+                    <canvas id="billChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 투표 현황 카드 -->
+            <div class="vote-card">
+                <h1 class="bill-title">{{data['name']}}</h1>
+                
+                <div class="bill-basic-info">
+                    <div class="info-item">
+                        <span class="info-label">제안자</span>
+                        <span class="info-value">{{data['proposer']}}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">제안일</span>
+                        <span class="info-value">{{data['date']}}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">조회수</span>
+                        <span class="info-value">{{data['views']}}</span>
+                    </div>
+                </div>
+                
+                <div class="vote-section">
+                    <h3 class="vote-title">투표 현황</h3>
+                    
+                    <div class="vote-badges">
+                        <span class="vote-badge agree">찬성: {{data['good']}}</span>
+                        <span class="vote-badge disagree">반대: {{data['bad']}}</span>
+                    </div>
+                    
+                    <div class="vote-progress">
+                        {% if data['good'] ==  0 and data['bad'] == 0 %}
+                            <!-- 투표가 아직 시작되지 않았을때  -->
+                            <div class="no-votes-yet">
+                                <div class="no-votes-icon">
+                                    <i class="bi bi-bar-chart"></i>
+                                </div>
+                                <div class="no-votes-text">
+                                    <p class="no-votes-title">투표가 아직 시작되지 않았습니다</p>
+                                    <p class="no-votes-subtitle">첫 번째 투표자가 되어주세요!</p>
+                                </div>
+                                
+                            </div>
+                        {% else %}
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-agree" data-rate = "{{data['good_rate']}}" >{{data['good_rate']}}%</div>
+                            <div class="progress-bar-disagree" data-rate = "{{data['bad_rate']}}">{{data['bad_rate']}}%</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <form method = "POST" action="/contents/{{data['id']}}">
+                        <div class="vote-buttons">
+                            <button class="vote-btn agree-btn" name = 'vote' id = "agree" value="agree">찬성</button>
+                            <button class="vote-btn disagree-btn" name = 'vote' id = "disagree" value="disagree">반대</button>
+                        </div>
+                    </form>
+                    <!-- <button class="vote-btn revote-btn" name = 'vote' id = "disagree" value="revote">다시 투표하기</button> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 법안 요약 -->
+        <div class="bill-summary">
+            <h2 class="section-title">
+                <i class="bi bi-file-text"></i> 법안 요약
+            </h2>
+            <div class="summary-content">
+                <p><strong>제안이유 및 주요내용 :</strong></p>
+                <p style= "white-space: pre-line;">{{summary}}</p>
+                
+                
+            </div>
+        </div>
+
+        <!-- 댓글창 -->
+        <div class="comments-section">
+            <h2 class="section-title">
+                <i class="bi bi-chat-dots"></i> 의견 나누기
+            </h2>
+            
+            <div class="comment-form">
+                <textarea class="comment-textarea" placeholder="이 법안에 대한 의견을 자유롭게 작성해주세요..."></textarea>
+                <div class="comment-actions">
+                    <div style="color: #666; font-size: 0.9rem;">
+                        <i class="bi bi-info-circle"></i> 건설적인 의견 교환을 위해 예의를 지켜주세요.
+                    </div>
+                    <button class="btn btn-primary" onclick="addComment()">
+                        <i class="bi bi-send"></i> 의견 등록
+                    </button>
+                </div>
+            </div>
+
+            <div class="comment-list" id="commentList">
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            <i class="bi bi-person-circle"></i> 시민A
+                        </span>
+                        <span class="comment-date">2024.03.20 14:30</span>
+                    </div>
+                    <div class="comment-content">
+                        개인정보보호를 강화하는 좋은 법안인 것 같습니다. 특히 구체적이고 명확한 고지 의무를 강화하는 부분이 매우 필요하다고 생각합니다.
+                    </div>
+                </div>
+
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            <i class="bi bi-person-circle"></i> 개인정보전문가
+                        </span>
+                        <span class="comment-date">2024.03.20 15:15</span>
+                    </div>
+                    <div class="comment-content">
+                        실제 현장에서 개인정보 동의서가 형식적으로 운영되는 경우가 많아서 이런 개정이 필요합니다. 다만 중소기업의 부담도 고려해서 단계적 시행을 검토해볼 필요가 있을 것 같습니다.
+                    </div>
+                </div>
+
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            <i class="bi bi-person-circle"></i> 관심있는시민
+                        </span>
+                        <span class="comment-date">2024.03.20 16:45</span>
+                    </div>
+                    <div class="comment-content">
+                        개인정보 동의받을 때 정말 복잡하고 어려운 말로 되어있어서 제대로 읽지 못하고 동의하는 경우가 많았는데, 이 법안이 통과되면 좀 더 이해하기 쉬워질 것 같네요.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //progress_bar 디자인 
+        const probar = document.querySelector(".progress-bar-agree")
+        const rate = probar.dataset.rate
+        probar.style.width = rate + '%'
+        const probar1 = document.querySelector(".progress-bar-disagree")
+        const rate1 = probar1.dataset.rate
+        probar1.style.width = rate1 + '%'
+
+        // 왼쪽 법안 정보 차트
+        const billCtx = document.getElementById('billChart').getContext('2d');
+        const billChart = new Chart(billCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['진행률', '남은 과정'],
+                datasets: [{
+                    data: [65, 35],
+                    backgroundColor: [
+                        '#1a237e',
+                        '#e9ecef'
+                    ],
+                    borderWidth: 0,
+                    cutout: '70%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.parsed}%`;
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    animateRotate: true,
+                    duration: 1500
+                }
+            },
+            plugins: [{
+                id: 'customText',
+                beforeDraw: function(chart) {
+                    const width = chart.width;
+                    const height = chart.height;
+                    const ctx = chart.ctx;
+                    
+                    ctx.restore();
+                    const fontSize = (height / 100).toFixed(2);
+                    ctx.font = fontSize + "em Noto Sans KR";
+                    ctx.textBaseline = "middle";
+                    ctx.fillStyle = "#1a237e";
+                    ctx.textAlign = "center";
+                    
+                    const text = "65%";
+                    const textX = Math.round((width - ctx.measureText(text).width) / 2);
+                    const textY = height / 2;
+                    
+                    ctx.fillText(text, textX, textY);
+                    ctx.save();
+                }
+            }]
+        });
+
+        // 댓글 추가 함수
+        function addComment() {
+            const textarea = document.querySelector('.comment-textarea');
+            const content = textarea.value.trim();
+            
+            if (!content) {
+                alert('의견을 입력해주세요.');
+                return;
+            }
+            
+            const commentList = document.getElementById('commentList');
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            
+            const newComment = document.createElement('div');
+            newComment.className = 'comment-item';
+            newComment.innerHTML = `
+                <div class="comment-header">
+                    <span class="comment-author">
+                        <i class="bi bi-person-circle"></i> 익명사용자
+                    </span>
+                    <span class="comment-date">${dateStr}</span>
+                </div>
+                <div class="comment-content">${content}</div>
+            `;
+            
+            commentList.insertBefore(newComment, commentList.firstChild);
+            textarea.value = '';
+            
+            // 애니메이션 효과
+            newComment.style.opacity = '0';
+            newComment.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                newComment.style.transition = 'all 0.5s ease';
+                newComment.style.opacity = '1';
+                newComment.style.transform = 'translateY(0)';
+            }, 100);
+        }
+
+        // Enter 키로 댓글 등록
+        document.querySelector('.comment-textarea').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                addComment();
+            }
+        });
+    </script>
+</body>
+</html>
+
+{% endblock %}

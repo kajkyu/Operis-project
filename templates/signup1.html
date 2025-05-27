@@ -1,0 +1,174 @@
+{% extends "header2.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{url_for('static' ,filename = 'signup.css')}}">
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="signup-container">
+    <div class="signup-header">
+        <h1>회원가입</h1>
+        <p>필수 정보를 입력하여 가입을 완료하세요</p>
+    </div>
+    
+    <form id="Signform" method="POST" action="/process/adduser">
+        <div class="input-group">
+            <label class="input-label" for="userid">아이디</label>
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" id="userid" name="id" class="input-field" placeholder="사용할 아이디를 입력하세요">
+            <div class="error-message">아이디를 입력해주세요</div>
+            <button type="button" id="chk" class="id-check-btn">중복확인
+                <i id="spinner" class="fa-solid fa-spinner fa-spin" style="display: none; margin-left: 6px;"></i>
+            </button>
+        </div>
+        
+        <div class="input-group">
+            <label class="input-label" for="name">이름</label>
+            <i class="fas fa-id-card input-icon"></i>
+            <input type="text" id="name" name="name" class="input-field" placeholder="이름을 입력하세요">
+            <div class="error-message">이름을 입력해주세요</div>
+        </div>
+        
+        <div class="input-group">
+            <label class="input-label" for="age">나이</label>
+            <i class="fas fa-birthday-cake input-icon"></i>
+            <input type="number" name="age" id="age" class="input-field" placeholder="나이를 입력하세요">
+            <div class="error-message">나이를 입력해주세요</div>
+        </div>
+        
+        <div class="input-group">
+            <label class="input-label" for="password">비밀번호</label>
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="password" name="pword" class="input-field" placeholder="비밀번호를 입력하세요">
+            <div class="error-message">비밀번호를 입력해주세요</div>
+        </div>
+        
+        <div class="input-group">
+            <label class="input-label" for="password-confirm">비밀번호 확인</label>
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="password-confirm" name="pword2" class="input-field" placeholder="비밀번호를 다시 입력하세요">
+            <div class="error-message">비밀번호 확인을 입력해주세요</div>
+        </div>
+        
+        <button type="submit" class="submit-btn">가입하기</button>
+        
+        <div class="terms">
+            가입하면 약관 및 개인정보처리방침에 동의하게 됩니다.
+        </div>
+    </form>
+</div>
+
+<script>
+    let chk = false // 아이디 중복 확인 flag
+    // 입력창 빈칸 및 아이디 중복 여부 확인
+    document.getElementById("Signform").addEventListener('submit', (event) => {
+        let flag = true 
+        const id = document.getElementsByName('id')[0].value
+        const name = document.getElementsByName('name')[0].value
+        const age = document.getElementsByName('age')[0].value
+        const password = document.getElementsByName('pword')[0].value
+        const password2 = document.getElementsByName('pword2')[0].value
+        const inputFields = document.querySelectorAll('.input-group');
+        
+
+        if(!id){
+            inputFields[0].classList.add("error")
+            inputFields[0].querySelector(".error-message").classList.add("show")
+            flag = false
+        }
+        if(!name){
+            inputFields[1].classList.add("error")
+            inputFields[1].querySelector(".error-message").classList.add("show")
+            flag = false
+        }
+        if(!age){
+            inputFields[2].classList.add("error")
+            inputFields[2].querySelector(".error-message").classList.add("show")
+            flag = false
+        }
+        if(!password){
+            inputFields[3].classList.add("error")
+            inputFields[3].querySelector(".error-message").classList.add("show")
+            flag = false
+        }
+        if(!password2){
+            inputFields[4].classList.add("error")
+            inputFields[4].querySelector(".error-message").classList.add("show")
+        }
+        if(password != password2){
+            inputFields[4].classList.add("error")
+            inputFields[4].querySelector(".error-message").textContent = "비밀번호가 일치하지 않습니다"
+            inputFields[4].querySelector(".error-message").classList.add("show")
+            flag = false
+        }
+        if(chk == false){
+            alert("아이디 중복을 확인해주세요")
+        }
+
+        if(flag == false || chk == false){
+            event.preventDefault()
+        }
+    })
+
+    const input_group = document.querySelectorAll(".input-group")
+    
+    input_group.forEach(element => {
+        element.querySelector(".input-field").addEventListener('focus' , () => {
+            if(element.classList.contains('error')){
+                element.classList.remove('error')
+                element.querySelector(".error-message").classList.remove('show')
+            }
+        })
+    });
+
+    // 아이디 중복 여부 확인 
+    document.querySelector('#chk').addEventListener('click', async(event) => {
+        const btn = document.querySelector("#chk")
+        const spinner = document.getElementById("spinner")
+        const check_id = document.getElementsByName("id")[0].value
+        if(!check_id){
+            const inputFields = document.querySelectorAll('.input-group');
+            inputFields[0].classList.add("error")
+            inputFields[0].querySelector(".error-message").classList.add("show")
+            return ;
+        }
+
+        btn.disabled = true
+        spinner.style.display = "inline-block"
+
+        const response = await fetch("/getdb" , {
+            method : "POST",
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify({id : check_id})
+        })
+        if(response.ok){
+            const res = await response.json()
+            btn.disabled = false
+            spinner.style.display = "none"
+            if(res['chk'] == "ok"){
+                alert("사용 가능한 아이디입니다")
+                chk = true
+            }
+            else if(res['chk'] == "Duplicate"){
+                alert("이미 사용중인 아이디입니다")
+            }
+            else if(res['chk'] == "error"){
+                alert("중복확인 중 에러 발생")
+            }
+            else{
+                alert("중복확인 중 에러 발생")
+            }
+        }
+        else{
+            btn.disabled = false
+            spinner.style.display = "none"
+            alert("Failed to connecting to server")
+        }
+    })
+</script>
+{% endblock %}

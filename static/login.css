@@ -1,0 +1,209 @@
+/* 기존 login.css 스타일을 header2.html의 배경과 조화되도록 수정 */
+.main-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px);
+    padding: 2rem 1rem;
+}
+
+.login-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    width: 400px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    padding: 40px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 24px;
+    color: white;
+    font-size: 28px;
+    box-shadow: 0 8px 16px rgba(26, 35, 126, 0.3);
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.login-container p {
+    color: #666;
+    margin-bottom: 32px;
+    font-size: 14px;
+}
+
+.input-group {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.input-field {
+    position: relative;
+}
+
+.input-field i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    z-index: 2;
+}
+
+.input-field input {
+    width: 100%;
+    padding: 14px 14px 14px 46px;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.input-field input:focus {
+    border-color: #1a237e;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+}
+
+.forgot-password {
+    text-align: right;
+    margin-bottom: 24px;
+}
+
+.forgot-password a {
+    color: #1a237e;
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.forgot-password a:hover {
+    color: #0d47a1;
+    text-decoration: underline;
+}
+
+.login-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26, 35, 126, 0.4);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 24px 0;
+}
+
+.divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.divider span {
+    padding: 0 16px;
+    color: #999;
+    font-size: 14px;
+}
+
+.register {
+    font-size: 14px;
+    color: #666;
+}
+
+.register a {
+    color: #1a237e;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.register a:hover {
+    color: #0d47a1;
+    text-decoration: underline;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+    .login-container {
+        width: 90%;
+        max-width: 400px;
+        padding: 30px 20px;
+        margin: 1rem;
+    }
+
+    .main-content {
+        padding: 1rem;
+        min-height: calc(100vh - 80px);
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 25px 15px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .logo {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+}
