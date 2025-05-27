@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-success" style="color: #222;">
+                최다 찬성 법안
+            </div>
+            <div class="card-body" style="color: #222;">
+                <div class="d-flex align-items-center mb-2">
+                    <h5 class="card-title mb-0 me-2">{{ max_agree.title }}</h5>
+                    <span class="badge bg-info">조회수: {{ max_agree.views }}</span>
+                </div>
+                <p class="card-text">{{ max_agree.content }}</p>
+                <div class="mb-2">
+                    <span class="badge bg-success">찬성: {{ max_agree.agree }}</span>
+                    <span class="badge bg-danger">반대: {{ max_agree.disagree }}</span>
+                </div>
+                {% set total = max_agree.agree + max_agree.disagree %}
+                {% set agree_percent = (max_agree.agree / total * 100)|round %}
+                {% set disagree_percent = (max_agree.disagree / total * 100)|round %}
+                <div class="progress mb-2" style="height: 1.5rem;">
+                    <div class="progress-bar bg-success" data-width="{{ agree_percent }}">{{ agree_percent }}%</div>
+                    <div class="progress-bar bg-danger" data-width="{{ disagree_percent }}">{{ disagree_percent }}%</div>
+                </div>
+                <a href="{{ url_for('bill_detail', bill_id=max_agree.id) }}" class="btn btn-success mt-2">자세히 보기</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-danger" style="color: #222;">
+                최다 반대 법안
+            </div>
+            <div class="card-body" style="color: #222;">
+                <div class="d-flex align-items-center mb-2">
+                    <h5 class="card-title mb-0 me-2">{{ max_disagree.title }}</h5>
+                    <span class="badge bg-info">조회수: {{ max_disagree.views }}</span>
+                </div>
+                <p class="card-text">{{ max_disagree.content }}</p>
+                <div class="mb-2">
+                    <span class="badge bg-success">찬성: {{ max_disagree.agree }}</span>
+                    <span class="badge bg-danger">반대: {{ max_disagree.disagree }}</span>
+                </div>
+                {% set total = max_disagree.agree + max_disagree.disagree %}
+                {% set agree_percent = (max_disagree.agree / total * 100)|round %}
+                {% set disagree_percent = (max_disagree.disagree / total * 100)|round %}
+                <div class="progress mb-2" style="height: 1.5rem;">
+                    <div class="progress-bar bg-success" data-width="{{ agree_percent }}">{{ agree_percent }}%</div>
+                    <div class="progress-bar bg-danger" data-width="{{ disagree_percent }}">{{ disagree_percent }}%</div>
+                </div>
+                <a href="{{ url_for('bill_detail', bill_id=max_disagree.id) }}" class="btn btn-danger mt-2">자세히 보기</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-info" style="color: #222;">
+                최다 조회 법안
+            </div>
+            <div class="card-body" style="color: #222;">
+                <div class="d-flex align-items-center mb-2">
+                    <h5 class="card-title mb-0 me-2">{{ max_views.title }}</h5>
+                    <span class="badge bg-info">조회수: {{ max_views.views }}</span>
+                </div>
+                <p class="card-text">{{ max_views.content }}</p>
+                <div class="mb-2">
+                    <span class="badge bg-success">찬성: {{ max_views.agree }}</span>
+                    <span class="badge bg-danger">반대: {{ max_views.disagree }}</span>
+                </div>
+                {% set total = max_views.agree + max_views.disagree %}
+                {% set agree_percent = (max_views.agree / total * 100)|round %}
+                {% set disagree_percent = (max_views.disagree / total * 100)|round %}
+                <div class="progress mb-2" style="height: 1.5rem;">
+                    <div class="progress-bar bg-success" data-width="{{ agree_percent }}">{{ agree_percent }}%</div>
+                    <div class="progress-bar bg-danger" data-width="{{ disagree_percent }}">{{ disagree_percent }}%</div>
+                </div>
+                <a href="{{ url_for('bill_detail', bill_id=max_views.id) }}" class="btn btn-info mt-2">자세히 보기</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-warning" style="color: #222;">
+                최소 조회 법안
+            </div>
+            <div class="card-body" style="color: #222;">
+                <div class="d-flex align-items-center mb-2">
+                    <h5 class="card-title mb-0 me-2">{{ min_views.title }}</h5>
+                    <span class="badge bg-info">조회수: {{ min_views.views }}</span>
+                </div>
+                <p class="card-text">{{ min_views.content }}</p>
+                <div class="mb-2">
+                    <span class="badge bg-success">찬성: {{ min_views.agree }}</span>
+                    <span class="badge bg-danger">반대: {{ min_views.disagree }}</span>
+                </div>
+                {% set total = min_views.agree + min_views.disagree %}
+                {% set agree_percent = (min_views.agree / total * 100)|round %}
+                {% set disagree_percent = (min_views.disagree / total * 100)|round %}
+                <div class="progress mb-2" style="height: 1.5rem;">
+                    <div class="progress-bar bg-success" data-width="{{ agree_percent }}">{{ agree_percent }}%</div>
+                    <div class="progress-bar bg-danger" data-width="{{ disagree_percent }}">{{ disagree_percent }}%</div>
+                </div>
+                <a href="{{ url_for('bill_detail', bill_id=min_views.id) }}" class="btn btn-warning mt-2">자세히 보기</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        최신 법안 목록
+    </div>
+    <div class="card-body">
+        <div class="list-group">
+            {% for bill in bills %}
+            <a href="{{ url_for('bill_detail', bill_id=bill.id) }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    <h5 class="mb-1 flex-grow-1 me-2" style="flex:1;">{{ bill.title }}</h5>
+                    <span class="badge bg-info ms-2">조회수: {{ bill.views }}</span>
+                    <small>{{ bill.date }}</small>
+                </div>
+                <p class="mb-1">{{ bill.content }}</p>
+                <div class="mt-2">
+                    <span class="badge bg-success">찬성: {{ bill.agree }}</span>
+                    <span class="badge bg-danger">반대: {{ bill.disagree }}</span>
+                </div>
+                {% set total = bill.agree + bill.disagree %}
+                {% set agree_percent = (bill.agree / total * 100)|round %}
+                {% set disagree_percent = (bill.disagree / total * 100)|round %}
+                <div class="progress mt-2" style="height: 1.2rem;">
+                    <div class="progress-bar bg-success" data-width="{{ agree_percent }}">{{ agree_percent }}%</div>
+                    <div class="progress-bar bg-danger" data-width="{{ disagree_percent }}">{{ disagree_percent }}%</div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const width = bar.getAttribute('data-width');
+        bar.style.width = width + '%';
+    });
+});
+</script>
+{% endblock %} 

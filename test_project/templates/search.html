@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>법안 검색</h2>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('search') }}" method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" name="q" value="{{ query }}" placeholder="법안 제목 또는 내용을 검색하세요">
+                <button class="btn btn-primary" type="submit">검색</button>
+            </div>
+        </form>
+
+        {% if query %}
+        <h4>검색 결과: "{{ query }}"</h4>
+        {% endif %}
+
+        <div class="list-group">
+            {% for bill in results %}
+            <a href="{{ url_for('bill_detail', bill_id=bill.id) }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ bill.title }}</h5>
+                    <small>{{ bill.date }}</small>
+                </div>
+                <p class="mb-1">{{ bill.content }}</p>
+                <small>발의자: {{ bill.proposer }}</small>
+                <div class="mt-2">
+                    <span class="badge bg-success">찬성: {{ bill.agree }}</span>
+                    <span class="badge bg-danger">반대: {{ bill.disagree }}</span>
+                    <span class="badge bg-info">조회수: {{ bill.views }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
