@@ -255,12 +255,12 @@ def crawling(BILL_NO) :
         datas[i] = datas[i].lstrip()
 
     summ = "\n".join(datas)
-    print("---" * 50)
+    # print("---" * 50)
     summ = summ.split('주요내용')
     summ = " ".join(summ)
     summ = summ.split('참고사항')
     summ = " ".join(summ)
-    print(summ)
+    # print(summ)
     return summ, data['nzmimeepazxkubdpn'][1]['row'][0]
 
 def make_data(data) :
@@ -295,16 +295,23 @@ def contents(BILL_NO):
     conn = pool.connection()
     cursor = conn.cursor()
     
+    #기존 db에 있는 법안인지 확인
     cursor.execute("select * from laws where BILL_NO = %s", (BILL_NO, ))
     result = cursor.fetchall()
 
     #투표 여부 확인
-    cursor.execute("select * from vote where BILL_NO = %s and id = %s", (BILL_NO, user['id']))
-    vote = cursor.fetchall()
     vote_config = None
-    if len(vote) > 0 : 
-        vote_config = True #이거 같이 보내야하는데 일단 찬/반을 확인해서 보낼지 고민 중
+    if user :
+        cursor.execute("select * from vote where BILL_NO = %s and id = %s", (BILL_NO, user['id']))
+        vote = cursor.fetchone()
+        
+        print("vote : ", vote)
+        
+        if vote != None and len(vote) > 0 : 
+            vote_config = vote[3]
+        
 
+    # len(reuslt) == 0 기존에 없던 법안
     if len(result) == 0 :
         print("create the rows")
         cursor.execute("insert into laws values(%s, %s, %s, %s, %s, %s, %s)", 
@@ -327,7 +334,7 @@ def contents(BILL_NO):
     
     
     #해당 laws 테이블에서의 데이터, 요약
-    return render_template("sdf.html", summary = summ, data = result)
+    return render_template("sdf.html", summary = summ, data = result, user= user, vote_config = vote_config)
 
 
 @app.route("/contents/<BILL_NO>", methods = ['POST'])
@@ -343,17 +350,36 @@ def vote(BILL_NO) :
     cursor = conn.cursor()
     
     if res == "agree" :
-        cursor.execute("insert into vote values(%s, %s, %s, True)", (user['id'], BILL_NO, user['name'], ))
+        cursor.execute("insert into vote() values(%s, %s, %s, True) on duplicate key update vote = True", (user['id'], BILL_NO, user['name'], ))
         cursor.execute("update laws set good = good+1 where BILL_NO = %s ;", (BILL_NO, ))
         
     elif res == "disagree" :
-        cursor.execute("insert into vote values(%s, %s, %s, False)", (user['id'], BILL_NO, user['name'], ))
+        cursor.execute("insert into vote() values(%s, %s, %s, False) on duplicate key update vote = False", (user['id'], BILL_NO, user['name'], ))
         cursor.execute("update laws set bad = bad+1 where BILL_NO = %s ;", (BILL_NO, ))
     conn.commit()
     
     conn.close()
     return redirect(url_for('contents', BILL_NO = BILL_NO))
 
+
+@app.route("/contents/delete/<BILL_NO>", methods = ['POST'])
+def vote_delete(BILL_NO) :
+    user = get_logged_user()
+    vote_config = request.form.get('revote')
+    vote_config = int(vote_config)
+    print("vote config in delete : " , vote_config, type(vote_config))
+    conn = pool.connection()
+    cursor = conn.cursor()
+    cursor.execute("delete from vote where id = %s and BILL_NO = %s", (user['id'], BILL_NO))
+    if vote_config == 1 :
+        cursor.execute("update laws set good = good - 1 where BILL_NO = %s", (BILL_NO,))
+    elif vote_config == 0 :
+        cursor.execute("update laws set bad = bad - 1 where BILL_NO = %s", (BILL_NO,))
+    else :
+        print("Delete Error")
+    conn.commit()
+    conn.close()
+    return redirect(url_for('contents', BILL_NO = BILL_NO))
 
 
 
