@@ -41,7 +41,12 @@
             <!-- 투표 현황 카드 -->
             <div class="vote-card">
                 <h1 class="bill-title">{{data['name']}}</h1>
-                
+                {% if user and vote_config == 1 %}
+                <h3 style="margin-bottom: 0.5rem; color: #28a745; text-align: right;">찬성</h3>
+                {% elif user and vote_config == 0 %}
+                <h3 style="margin-bottom: 0.5rem; color: #dc3545; text-align: right;">반대</h3>
+                {% endif %}
+                <button></button>
                 <div class="bill-basic-info">
                     <div class="info-item">
                         <span class="info-label">제안자</span>
@@ -63,6 +68,7 @@
                     <div class="vote-badges">
                         <span class="vote-badge agree">찬성: {{data['good']}}</span>
                         <span class="vote-badge disagree">반대: {{data['bad']}}</span>
+                        
                     </div>
                     
                     <div class="vote-progress">
@@ -80,18 +86,27 @@
                             </div>
                         {% else %}
                         <div class="progress-bar-container">
+                            {% if data['good_rate'] != 0 %}
                             <div class="progress-bar-agree" data-rate = "{{data['good_rate']}}" >{{data['good_rate']}}%</div>
+                            {% endif %}
+                            {% if data['bad_rate'] != 0 %}
                             <div class="progress-bar-disagree" data-rate = "{{data['bad_rate']}}">{{data['bad_rate']}}%</div>
+                            {% endif %}
                         </div>
                         {% endif %}
                     </div>
+                    {% if vote_config == None %}
                     <form method = "POST" action="/contents/{{data['id']}}">
                         <div class="vote-buttons">
                             <button class="vote-btn agree-btn" name = 'vote' id = "agree" value="agree">찬성</button>
                             <button class="vote-btn disagree-btn" name = 'vote' id = "disagree" value="disagree">반대</button>
                         </div>
                     </form>
-                    <!-- <button class="vote-btn revote-btn" name = 'vote' id = "disagree" value="revote">다시 투표하기</button> -->
+                    {% else %}
+                    <form method = "POST" action="/contents/delete/{{data['id']}}">
+                    <button class="vote-btn revote-btn" name = 'revote' id = "disagree" value= "{{vote_config}}">다시 투표하기</button>
+                    </form>
+                    {% endif %}
                 </div>
             </div>
         </div>

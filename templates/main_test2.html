@@ -98,8 +98,12 @@
                             <span class="badge bg-danger">반대: {{max_valuable['bad']}}</span>
                         </div>
                         <div class="progress mb-2">
+                            {% if max_valuable['good_rate'] != 0 %}
                             <div class="progress-bar bg-success" data-width="{{max_valuable['good_rate']}}">{{max_valuable['good_rate']}}%</div>
+                            {% endif %}
+                            {% if max_valuable['bad_rate'] != 0 %}
                             <div class="progress-bar bg-danger" data-width="{{max_valuable['bad_rate']}}">{{max_valuable['bad_rate']}}%</div>
+                            {% endif %}
                         </div>
                         <a href="/contents/{{max_valuable['id']}}" class="btn btn-warning mt-2">자세히 보기</a>
                     </div>
@@ -134,8 +138,12 @@
                             <span class="badge bg-danger">반대: {{rows['bad']}}</span>
                         </div>
                         <div class="progress mt-2">
+                            {% if rows['good_rate'] != 0 %}
                             <div class="progress-bar bg-success" data-width="{{rows['good_rate']}}">{{rows['good_rate']}}%</div>
+                            {% endif %}
+                            {% if rows['bad_rate'] != 0 %}
                             <div class="progress-bar bg-danger" data-width="{{rows['bad_rate']}}">{{rows['bad_rate']}}%</div>
+                            {% endif %}
                     </div>
                     {% endif %}
                     </a>
