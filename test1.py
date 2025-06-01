@@ -206,7 +206,50 @@ def logins() :
             return "Wrong Password"
     else :
         return "there is no data"
-        
+
+#법안 검색 페이지로드
+#/search URL로 GET 요청이 들어오면 search() 함수 실행
+@app.route("/search", methods = ['GET'])
+def search() : 
+    #URL의 쿼리 파라미터를 가져옴(사용자가 입력한 데이터값)
+    #query 파라미터가 없으면 빈 문자열 반환
+    query = request.args.get('query', '')
+    #query 파라미터가 있는 경우
+    if query:
+        #데이터베이스 연결(데이터베이스에서 데이터를 조회하기 위함)
+        conn = pool.connection()
+        cursor = conn.cursor()
+        #BILL_NAME 컬럼에서 사용자가 입력한 검색어가 포함된 법안을 찾음, %검색어%형태를 통해 부분 일치도 찾음
+        cursor.execute("SELECT * FROM laws WHERE BILL_NAME LIKE %s", ('%' + query + '%',))
+        #모든 검색 결과 가져옴
+        results = cursor.fetchall()
+        #데이터베이스 연결종료
+        conn.close()
+        #검색 결과 처리
+        search_results = []
+        for result in results:
+            if result[4] + result[5] == 0:
+                good_rate = 0
+                bad_rate = 0
+            else:
+                good_rate = int((result[4] / (result[4] + result[5])) * 100)
+                bad_rate = 100 - good_rate
+            #검색 결과 데이터 구조화(템플릿에서 사용하기 쉽게)
+            search_results.append({
+                "id": result[0],
+                "name": result[1],
+                "proposer": result[2],
+                "date": result[3],
+                "good": result[4],
+                "bad": result[5],
+                "views": result[6],
+                "good_rate": good_rate,
+                "bad_rate": bad_rate
+            })
+        #검색 결과를 search.html 템플릿에 전달하여 화면 구성
+        return render_template("search.html", results=search_results)
+    #검색어가 없으면 빈 검색 페이지를 보여줌
+    return render_template("search.html")
 
 @app.route("/getdb", methods = ['POST'])
 def getdb():

@@ -1,0 +1,78 @@
+{% extends "header2.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{url_for('static' ,filename = 'search.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="search-page-container">
+    <div class="search-content-wrapper">
+        <h2 class="search-page-title">법안 검색</h2>
+        <form action="/search" method="GET" class="search-page-form">
+            <div class="search-input-wrapper">
+                <input type="text" name="query" class="search-page-input" placeholder="검색할 법안 제목을 입력하세요" value="{{ request.args.get('query', '') }}">
+                <button type="submit" class="search-page-btn">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+
+        {% if results %}
+        <div class="search-results-section">
+            <h3 class="search-results-title">검색 결과</h3>
+            <div class="search-results-grid">
+                {% for result in results %}
+                <div class="search-result-item">
+                    <div class="search-result-card">
+                        <div class="search-card-header bg-info">
+                            {{ result.name }}
+                        </div>
+                        <div class="search-card-body">
+                            <div class="search-card-meta">
+                                <span class="search-badge bg-info">조회수: {{ result.views }}</span>
+                            </div>
+                            <p class="search-card-text">
+                                제안번호: {{ result.id }}<br>
+                                발의자: {{ result.proposer }}<br>
+                                제안일: {{ result.date }}
+                            </p>
+                            <div class="search-vote-info">
+                                <span class="search-badge bg-success">찬성: {{ result.good }}</span>
+                                <span class="search-badge bg-danger">반대: {{ result.bad }}</span>
+                            </div>
+                            <div class="search-progress">
+                                {% if result.good_rate != 0 %}
+                                <div class="search-progress-bar bg-success" data-width="{{ result.good_rate }}">{{ result.good_rate }}%</div>
+                                {% endif %}
+                                {% if result.bad_rate != 0 %}
+                                <div class="search-progress-bar bg-danger" data-width="{{ result.bad_rate }}">{{ result.bad_rate }}%</div>
+                                {% endif %}
+                            </div>
+                            <a href="/contents/{{ result.id }}" class="search-detail-btn">자세히 보기</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% elif request.args.get('query') %}
+        <div class="search-no-results">
+            <div class="search-no-results-icon">
+                <i class="bi bi-search"></i>
+            </div>
+            <p class="search-no-results-text">검색 결과가 없습니다.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressBars = document.querySelectorAll('.search-progress-bar');
+        progressBars.forEach(bar => {
+            const width = bar.getAttribute('data-width');
+            bar.style.width = width + '%';
+        });
+    });
+</script>
+{% endblock %}
