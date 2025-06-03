@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import requests, urllib.request
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 
@@ -16,13 +17,14 @@ load_dotenv()
 pool = PooledDB(
     creator = pymysql,
     maxconnections = 3,     
-    mincached = 1 ,         
+    mincached = 1,         
     blocking = True,
     host = "sql5.freesqldatabase.com",
     user = "sql5777334",
     password = os.getenv('DB_password'),
     port = 3306, 
-    database = "sql5777334"
+    database = "sql5777334",
+    charset = "utf8mb4"
 )
 
 # query = "select * from users"
@@ -122,7 +124,7 @@ def index():
     query = ["select * from laws where views > 200 order by good / (good + bad) desc limit 1;",
              "select * from laws where views > 200 order by bad / (good + bad) desc limit 1;",
              "select * from laws order by views desc limit 1;",
-             "select * from laws where views > 50 order by views asc limit 1;"]
+             "select * from laws where views > 50 order by views asc limit 1;"] # 주목할 법안 division with zero 조심 
     dataset = get_datas(query)
     max_good = dataset[0]
     max_bad = dataset[1]
@@ -285,6 +287,18 @@ def make_data(data) :
     }
     return result
 
+def get_comments(comments) :
+    comments_list = []
+    for i in comments :
+        comments_list.append({
+            'id' : i[0],
+            'BILL_NO' : i[1],
+            'name' : i[2],
+            'vote' : i[3],
+            'contents' : i[4],
+            'date' : i[5]
+        })
+    return comments_list
 
 @app.route("/contents/<BILL_NO>")
 def contents(BILL_NO):
@@ -317,24 +331,29 @@ def contents(BILL_NO):
         cursor.execute("insert into laws values(%s, %s, %s, %s, %s, %s, %s)", 
                        (data['BILL_NO'], data['BILL_NAME'], data['PROPOSER'], data['PROPOSE_DT'],0 ,0, 1,) )
         conn.commit()
-        conn.close()
+        # conn.close()
         result = []
         result.extend([data['BILL_NO'], data['BILL_NAME'], data['PROPOSER'], data['PROPOSE_DT'],0 ,0, 1])
     else :
         print("Existing rows")
         cursor.execute("update laws set views = views+1 where BILL_NO = %s ;", (BILL_NO, ))
         conn.commit()
-        conn.close()
+        # conn.close()
         result = list(result[0])
-
+    
+    cursor.execute("select * from comments where BILL_NO = %s", (BILL_NO,))
+    Comments_List = cursor.fetchall()
+    conn.close()
+    Comments_List = get_comments(Comments_List)
+    print(Comments_List)
 
     result = make_data(result)  
     result['views']+=1
-    print(result)
+    print("result : ", result)
     
     
     #해당 laws 테이블에서의 데이터, 요약
-    return render_template("sdf.html", summary = summ, data = result, user= user, vote_config = vote_config)
+    return render_template("sdf.html", summary = summ, data = result, user= user, vote_config = vote_config, Comments_List = Comments_List)
 
 
 @app.route("/contents/<BILL_NO>", methods = ['POST'])
@@ -350,11 +369,11 @@ def vote(BILL_NO) :
     cursor = conn.cursor()
     
     if res == "agree" :
-        cursor.execute("insert into vote() values(%s, %s, %s, True) on duplicate key update vote = True", (user['id'], BILL_NO, user['name'], ))
+        cursor.execute("insert into vote() values(%s, %s, %s, %s) on duplicate key update vote = True", (user['id'], BILL_NO, user['name'], "agree",))
         cursor.execute("update laws set good = good+1 where BILL_NO = %s ;", (BILL_NO, ))
         
     elif res == "disagree" :
-        cursor.execute("insert into vote() values(%s, %s, %s, False) on duplicate key update vote = False", (user['id'], BILL_NO, user['name'], ))
+        cursor.execute("insert into vote() values(%s, %s, %s, %s) on duplicate key update vote = False", (user['id'], BILL_NO, user['name'], "disagree",))
         cursor.execute("update laws set bad = bad+1 where BILL_NO = %s ;", (BILL_NO, ))
     conn.commit()
     
@@ -366,14 +385,14 @@ def vote(BILL_NO) :
 def vote_delete(BILL_NO) :
     user = get_logged_user()
     vote_config = request.form.get('revote')
-    vote_config = int(vote_config)
+    
     print("vote config in delete : " , vote_config, type(vote_config))
     conn = pool.connection()
     cursor = conn.cursor()
     cursor.execute("delete from vote where id = %s and BILL_NO = %s", (user['id'], BILL_NO))
-    if vote_config == 1 :
+    if vote_config == "agree" :
         cursor.execute("update laws set good = good - 1 where BILL_NO = %s", (BILL_NO,))
-    elif vote_config == 0 :
+    elif vote_config == "disagree" :
         cursor.execute("update laws set bad = bad - 1 where BILL_NO = %s", (BILL_NO,))
     else :
         print("Delete Error")
@@ -381,7 +400,31 @@ def vote_delete(BILL_NO) :
     conn.close()
     return redirect(url_for('contents', BILL_NO = BILL_NO))
 
+@app.route("/comments", methods = ['POST'])
+def comments() :
+    data = request.get_json()
+    userid = data['id']
+    BILL_NO = data['BILL_NO']
+    contents = data['content']
+    username = data['username']
+    vote_config = data['vote_config']
+    print(userid, BILL_NO, contents)
+    print(time.strftime('%Y.%m.%d %H:%M'))
+    date = time.strftime('%Y-%m-%d %H:%M')
+    conn = pool.connection()
+    cursor = conn.cursor()
+    # cursor.execute("select * from vote where id = %s and BILL_NO = %s", (userid, BILL_NO,))
+    # rows = cursor.fetchone()
+    # print("rows :",  rows)
+    # if rows == None :
+    #     vote = None
+    # else :
+    #     vote = rows[3]
 
+    cursor.execute("insert into comments(id, BILL_NO, name, vote, contents, reg_date ) values(%s, %s, %s, %s, %s, %s);", (userid, BILL_NO, username, vote_config, contents, date ))
+    conn.commit()
+    conn.close()
+    return data
 
 
 
@@ -389,6 +432,8 @@ def vote_delete(BILL_NO) :
 def shows():
     inp = request.form['data']
     return inp
+
+
 
 if __name__ == "__main__" :
     app.run('0.0.0.0', port = 3000, debug = True)
