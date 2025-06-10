@@ -1,0 +1,153 @@
+{% extends "header2.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{url_for('static' ,filename = 'search.css')}}">
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="main-container">
+        <!-- 검색 섹션 -->
+        <div class="search-section">
+            <h1 class="search-title">
+                <i class="bi bi-search"></i> 법안 검색
+            </h1>
+            <form action="/search" method = 'POST' id = "search_form">
+                <input type="hidden" name="action_type" value = "searching" >
+                <div class="main-search">
+                    {% if search %}
+                    <input type="text" class="main-search-input" name = "search-target" id="mainSearchInput" 
+                        placeholder="검색할 법안명, 발의자, 키워드를 입력하세요..." value = "{{search}}">
+                    {% else %}
+                    <input type="text" class="main-search-input" name = "search-target" id="mainSearchInput" 
+                        placeholder="검색할 법안명, 발의자, 키워드를 입력하세요...">
+                    {% endif %}
+                    <button class="main-search-button" type="submit">
+                        <i class="bi bi-search"></i> 검색
+                    </button>
+                </form>
+            </div>
+            
+            <div class="filter-section">
+                
+                <div class="filter-group">
+                    <label for="statusFilter"><i class="bi bi-funnel"></i> 처리상태:</label>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">전체</option>
+                        <option value="pending">심사중</option>
+                        <option value="passed">가결</option>
+                        <option value="rejected">부결</option>
+                        <option value="withdrawn">철회</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="committeeFilter"><i class="bi bi-people"></i> 소관위원회:</label>
+                    <select id="committeeFilter" class="filter-select">
+                        <option value="">전체</option>
+                        <option value="법사위">법제사법위원회</option>
+                        <option value="국정감사">국정감사위원회</option>
+                        <option value="기재위">기획재정위원회</option>
+                        <option value="교육위">교육위원회</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="dateFilter"><i class="bi bi-calendar"></i> 발의일:</label>
+                    <select id="dateFilter" class="filter-select">
+                        <option value="">전체</option>
+                        <option value="recent">최근 1개월</option>
+                        <option value="3months">최근 3개월</option>
+                        <option value="6months">최근 6개월</option>
+                        <option value="1year">최근 1년</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 검색 결과 섹션 -->
+        {% if search %}
+        <div class="results-section" id="resultsSection" style="display: block;">
+            <div class="results-header">
+                <div class="results-count" id="resultsCount">
+                    "{{search}}" 검색 결과 {{total}}건 
+                </div>
+                <!-- <select class="sort-select" id="sortSelect" >
+                    <option value="relevance">관련도순</option>
+                    <option value="date">최신순</option>
+                    <option value="title">제목순</option>
+                </select> -->
+            </div>
+            {% endif %}
+            {% if search_result %}
+            <div id="resultsContainer">
+                <!-- 검색 결과가 여기에 표시됩니다 -->
+                {% for result in search_result %}
+                <a href="/contents/{{result['id']}}" style="text-decoration: none;">
+                <div class="result-item" >
+                    <h3 class="result-title">{{result['name']}}</h3>
+                    <div class="result-meta">
+                        <div class="meta-item">
+                            <i class="bi bi-file-earmark-text"></i>
+                            <span>의안번호: {{result['id']}}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="bi bi-person"></i>
+                            <span>발의자: {{result['proposer']}}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="bi bi-building"></i>
+                            <span>소관위: {{result['committee']}}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="bi bi-calendar"></i>
+                            <span>발의일: {{result['date']}}</span>
+                        </div>
+                    </div>
+                    
+                </div>
+                </a>
+                {% endfor %}
+
+                {% elif total == 0 %}
+                <div class="no-results">
+                    <i class="bi bi-search"></i>
+                    <h3>검색 결과가 없습니다</h3>
+                    <p>다른 키워드로 검색해보세요.</p>
+                </div>
+            </div>
+            {% endif %}
+            {% if search_result %}
+            <div class="pagination" id="pagination" >
+                <form action="/search" method = "POST">
+                    <input type="hidden" name="action_type" value = "page">
+                    <input type="hidden" name="search-target" value = "{{search}}">
+                    <input type="hidden" name="pindex" value = "{{pindex}}">
+                    <input type="hidden" name="total_page" value = "{{page}}">
+                    <button class="page-btn" name ="page_button" value = "prev">이전</button>
+                    <span style="padding: 0.5rem 1rem; color: #666;" id = "curs"> {{pindex}} / {{page}} 페이지 </span>
+                    <button class="page-btn" name ="page_button" value ="next">다음</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    
+    <script>
+        document.getElementById('search_form').addEventListener('submit' , (e) => {
+            const search = document.getElementById('mainSearchInput').value
+            if(!search){
+                alert("검색어를 입력해주세요")
+                e.preventDefault()
+            }
+            
+        })
+    
+        // 엔터키 검색 지원
+        document.getElementById('mainSearchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+               
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

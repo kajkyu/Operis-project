@@ -1,0 +1,71 @@
+{% extends "header2.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{url_for('static' ,filename = 'login.css')}}">
+{% endblock %}
+
+{% block content %}
+
+
+<div class="main-content">
+    <div class="login-container">
+        <div class="logo">
+            <i class="bi bi-building"></i>
+        </div>
+        <h1>환영합니다</h1>
+        <p>계정에 로그인하여 서비스를 이용하세요</p>
+        
+        <form method="POST" action="/process/login" id="loginform">
+            <div class="input-group">
+                <label for="email">아이디</label>
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="id" id="email" placeholder="아이디를 입력하세요">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">비밀번호</label>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" id="password" placeholder="비밀번호를 입력하세요">
+                </div>
+            </div>
+            
+            <div class="forgot-password">
+                <a href="/">비밀번호를 잊으셨나요?</a>
+            </div>
+            
+            <button type="submit" class="login-btn">로그인</button>
+        </form>
+        
+        <div class="divider">
+            <span>또는</span>
+        </div>
+         
+        <div class="register">
+            계정이 없으신가요? <a href="/signup">회원가입</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // form에 eventlistener 생성, submit 이벤트 발생 시, 아이디, 비밀번호 공백 확인 
+    document.getElementById('loginform').addEventListener('submit', (event) => {
+        let flag = true;   // 공백 확인을 위한 flag
+        const id = document.getElementsByName('id')[0].value    // 입력한 id 
+        const password = document.getElementsByName('password')[0].value    // 입력한 password
+        if(!id){    // id가 null이면 아이디 입력 경고창 생성 및 flag = false
+            flag = false
+            alert("아이디를 입력하세요")
+        }
+        if(!password){  // password가 null이면 비밀번호 입력 경고창 생성 및 flag = false
+            flag = false
+            alert("비밀번호를 입력하세요")
+        }
+        if(flag == false){  // flag가 false면 submit 이벤트 막음
+            event.preventDefault()
+        }
+    })
+</script>
+{% endblock %}
