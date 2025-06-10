@@ -129,7 +129,7 @@ def index():
     query = ["select * from laws where views > 200 order by good / (good + bad) desc limit 1;",
              "select * from laws where views > 200 order by bad / (good + bad) desc limit 1;",
              "select * from laws order by views desc limit 1;",
-             "select * from laws where views > 50 order by views asc limit 1;"] # 주목할 법안 division with zero 조심 
+             "select * from laws where views > 50 and good+bad != 0 order by views asc limit 1;"] # 주목할 법안 division with zero 조심 
     #select * from laws where views > 50 order by PROPOSE_DT desc limit 1 ;
     #select * from laws where views > 50 order by views asc limit 1;
     dataset = get_datas(query)
