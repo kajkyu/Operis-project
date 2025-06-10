@@ -29,39 +29,7 @@
                 </form>
             </div>
             
-            <div class="filter-section">
-                
-                <div class="filter-group">
-                    <label for="statusFilter"><i class="bi bi-funnel"></i> 처리상태:</label>
-                    <select id="statusFilter" class="filter-select">
-                        <option value="">전체</option>
-                        <option value="pending">심사중</option>
-                        <option value="passed">가결</option>
-                        <option value="rejected">부결</option>
-                        <option value="withdrawn">철회</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="committeeFilter"><i class="bi bi-people"></i> 소관위원회:</label>
-                    <select id="committeeFilter" class="filter-select">
-                        <option value="">전체</option>
-                        <option value="법사위">법제사법위원회</option>
-                        <option value="국정감사">국정감사위원회</option>
-                        <option value="기재위">기획재정위원회</option>
-                        <option value="교육위">교육위원회</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="dateFilter"><i class="bi bi-calendar"></i> 발의일:</label>
-                    <select id="dateFilter" class="filter-select">
-                        <option value="">전체</option>
-                        <option value="recent">최근 1개월</option>
-                        <option value="3months">최근 3개월</option>
-                        <option value="6months">최근 6개월</option>
-                        <option value="1year">최근 1년</option>
-                    </select>
-                </div>
-            </div>
+            
         </div>
 
         <!-- 검색 결과 섹션 -->
@@ -71,11 +39,7 @@
                 <div class="results-count" id="resultsCount">
                     "{{search}}" 검색 결과 {{total}}건 
                 </div>
-                <!-- <select class="sort-select" id="sortSelect" >
-                    <option value="relevance">관련도순</option>
-                    <option value="date">최신순</option>
-                    <option value="title">제목순</option>
-                </select> -->
+                
             </div>
             {% endif %}
             {% if search_result %}
