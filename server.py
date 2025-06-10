@@ -29,18 +29,7 @@ pool = PooledDB(
     database = "sql5777334",
     charset = "utf8mb4"
 )
-# pool = PooledDB(
-#     creator = pymysql,
-#     maxconnections = 10,     
-#     mincached = 5,         
-#     blocking = True,
-#     host = "127.0.0.1",
-#     user = "root",
-#     password = "102512as",
-#     port = 3306, 
-#     database = "operis",
-#     charset = "utf8mb4"
-# )
+
 
 
 
@@ -185,7 +174,7 @@ def signups():
         cursor.execute("insert into users values(%s ,%s,%s ,%s)", (pid, pname, page, pword,) )
         conn.commit()
         conn.close()
-        return "success to add the user"
+        return redirect('/login')
     except Exception as e :
         return "error" 
 
